@@ -6,10 +6,10 @@ import asyncio
 
 import socket
 
-HOST = '10.0.0.157' # IP of your Raspberry Pi
+HOST = '192.168.137.206' # IP of your Raspberry Pi
 PORT = 5999         # IIT's Network have this port available
 
-power_val = 10      # Amount of Power to the Motorse; Default value is 50 but reduced to 10
+power_val = 50      # Amount of Power to the Motorse; Default value is 50 but reduced to 10
 key = 'status'
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -20,11 +20,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     with conn:
         print('Connected by', addr)
         while True:
-            data = conn.recv(1024)
+            data = int(conn.recv(1024))
             if not data:
                 break
             print('Received: ', repr(data))
-            threshold = b'90'       # threshold to enable the car to move; emotivbci sends in scale of 0-100 of the strength of the output
+            threshold = 80       # threshold to enable the car to move; emotivbci sends in scale of 0-100 of the strength of the output
             if data >= threshold:
                 fc.forward(power_val)   # move forward command for the motor
                 print('move forward')
@@ -90,6 +90,7 @@ def readkey(getchar_fn=None):
         
 # if __name__ == '__main__':
     # kb_ctrl()
+
 
 
 
